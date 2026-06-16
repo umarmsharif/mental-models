@@ -7,11 +7,40 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var p = new URLSearchParams(location.search).get('theme');
+  var c = document.documentElement.classList;
+  if (p === 'dark') c.add('theme-dark');
+  else if (p === 'light') c.add('theme-light');
+})();
+</script>
 <style>
 :root{
-  --ground:#FCFCFA; --ink:#1a221d; --pine:#1f4d3a; --pine-soft:#2f6b4f;
+  --ground:#FCFCFA; --card:#ffffff; --ink:#1a221d; --pine:#1f4d3a; --pine-soft:#2f6b4f;
   --line:#dde5e0; --mute:#6b7a72; --wash:#f3f6f4; --amber:#9a6b15;
-  --green-tint:#e3efe8;
+  --tag-gate-bg:#1f4d3a; --tag-gate-fg:#ffffff;
+  --tag-fan-bg:#2f6b4f; --tag-fan-fg:#ffffff;
+  --chip-bg:#e3efe8; --chip-fg:#1f4d3a; --chip-bd:#c7ddcf;
+  --go-bg:#1f4d3a; --go-fg:#ffffff; --hl:#1f4d3a; --arrow:#1f4d3a;
+}
+html.theme-dark{
+  --ground:#0e1613; --card:#15211b; --ink:#e9efeb; --pine:#8ad0aa; --pine-soft:#9ad3b4;
+  --line:#27362e; --mute:#94aa9e; --wash:#172420; --amber:#d6ab68;
+  --tag-gate-bg:#2c6048; --tag-gate-fg:#eafdf3;
+  --tag-fan-bg:#2a5a43; --tag-fan-fg:#e6f7ee;
+  --chip-bg:#1b2e25; --chip-fg:#8fd2ad; --chip-bd:#2f4a3b;
+  --go-bg:#2c6048; --go-fg:#eafdf3; --hl:#8fd2ad; --arrow:#8ad0aa;
+}
+@media (prefers-color-scheme: dark){
+  html:not(.theme-light){
+    --ground:#0e1613; --card:#15211b; --ink:#e9efeb; --pine:#8ad0aa; --pine-soft:#9ad3b4;
+    --line:#27362e; --mute:#94aa9e; --wash:#172420; --amber:#d6ab68;
+    --tag-gate-bg:#2c6048; --tag-gate-fg:#eafdf3;
+    --tag-fan-bg:#2a5a43; --tag-fan-fg:#e6f7ee;
+    --chip-bg:#1b2e25; --chip-fg:#8fd2ad; --chip-bd:#2f4a3b;
+    --go-bg:#2c6048; --go-fg:#eafdf3; --hl:#8fd2ad; --arrow:#8ad0aa;
+  }
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -19,31 +48,31 @@ body{font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
   line-height:1.5;padding:58px 64px;}
 .wrap{max-width:920px;margin:0 auto;}
 
-.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pine-soft);font-weight:700;}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pine);font-weight:700;}
 h1{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:37px;line-height:1.12;
   margin:11px 0 7px;letter-spacing:-.01em;color:var(--ink);}
 .sub{font-size:15.5px;color:var(--mute);max-width:720px;}
+.sub b{color:var(--ink);}
 
 .phase-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
   color:var(--pine);margin:34px 0 14px;}
 
-.card{border:1px solid var(--line);border-radius:12px;padding:17px 20px;background:#fff;}
-.card.gate{border:1.5px solid var(--pine);box-shadow:0 1px 0 rgba(31,77,58,.05);}
+.card{border:1px solid var(--line);border-radius:12px;padding:17px 20px;background:var(--card);}
+.card.gate{border:1.5px solid var(--pine);}
 .card .lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--pine);font-weight:700;}
 .card.plain .lab{color:var(--mute);}
 .card h3{font-size:19px;font-weight:700;margin:4px 0 6px;color:var(--ink);letter-spacing:-.01em;}
 .card p{font-size:14px;color:var(--mute);}
 .card p b{color:var(--ink);font-weight:700;}
 
-.arrow{text-align:center;color:var(--pine);font-size:15px;font-weight:700;margin:9px 0;letter-spacing:.02em;}
-.arrow .dim{color:#9fb0a7;}
+.arrow{text-align:center;color:var(--arrow);font-size:15px;font-weight:700;margin:9px 0;}
 
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
 .tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   padding:3px 9px;border-radius:6px;}
-.tag.gate{background:var(--pine);color:#fff;}
-.tag.ask{background:var(--green-tint);color:var(--pine);border:1px solid #c7ddcf;}
-.tag.fan{background:var(--pine-soft);color:#fff;}
+.tag.gate{background:var(--tag-gate-bg);color:var(--tag-gate-fg);}
+.tag.ask{background:var(--chip-bg);color:var(--chip-fg);border:1px solid var(--chip-bd);}
+.tag.fan{background:var(--tag-fan-bg);color:var(--tag-fan-fg);}
 .tag.io{background:var(--wash);color:var(--ink);border:1px solid var(--line);
   font-family:ui-monospace,Menlo,monospace;letter-spacing:0;text-transform:none;}
 
@@ -55,16 +84,16 @@ h1{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:37px;
 .read{background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:12px 14px;
   font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7;color:var(--ink);white-space:pre;overflow-x:auto;}
 .read .c{color:var(--mute);font-style:italic;}
-.read .hl{color:var(--pine);font-weight:700;}
+.read .hl{color:var(--hl);font-weight:700;}
 
 .opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
 .opt{font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:7px;padding:4px 10px;
   color:var(--ink);background:var(--wash);}
-.opt.go{background:var(--pine);color:#fff;border-color:var(--pine);}
+.opt.go{background:var(--go-bg);color:var(--go-fg);border-color:var(--go-bg);}
 
 .catrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px;}
 .catpill{font-size:10.5px;font-weight:700;font-family:ui-monospace,Menlo,monospace;
-  background:var(--green-tint);color:var(--pine);border:1px solid #c7ddcf;border-radius:6px;padding:4px 9px;}
+  background:var(--chip-bg);color:var(--chip-fg);border:1px solid var(--chip-bd);border-radius:6px;padding:4px 9px;}
 .note{background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
   font-size:12.5px;color:var(--mute);}
 .note b{color:var(--ink);}
@@ -93,7 +122,7 @@ h1{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:37px;
 
   <div class="kicker">mental-models &middot; agent skill</div>
   <h1>How it works: dump &rarr; infer &rarr; spar &rarr; commit</h1>
-  <p class="sub">Describe a problem once. The skill infers the run's shape, stress-tests your thinking against ~60 mental models, and commits to a position. Two modes, one confirm gate, no questionnaire. The worked example below follows one run: <b style="color:var(--ink)">Northwind's</b> AI agent hit 200 conversations in week 3, and the team wants to double marketing spend.</p>
+  <p class="sub">Describe a problem once. The skill infers the run's shape, stress-tests your thinking against ~60 mental models, and commits to a position. Two modes, one confirm gate, no questionnaire. The worked example below follows one run: <b>Northwind's</b> AI agent hit 200 conversations in week 3, and the team wants to double marketing spend.</p>
 
   <div class="phase-label">Phase A &middot; Intake</div>
 

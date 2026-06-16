@@ -4,7 +4,10 @@ A cognitive partner that stress-tests your thinking, then commits to a position.
 
 `mental-models` is an [agent skill](https://docs.claude.com/en/docs/claude-code/skills) that spars with you against a library of ~60 mental models. Hand it a strategy, a thesis, a decision, or a problem; it finds what you've missed, scores the models that actually bite, and takes a stand on the story the evidence supports. It grapples with you, not for you.
 
-![How mental-models works — dump, infer, spar, commit](assets/workflow.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/workflow-dark.png">
+  <img alt="How mental-models works — dump, infer, spar, commit" src="assets/workflow.png">
+</picture>
 
 ## What it does
 
