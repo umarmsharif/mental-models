@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mental-models · How it works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#FCFCFA; --ink:#1a221d; --pine:#1f4d3a; --pine-soft:#2f6b4f;
+  --line:#dde5e0; --mute:#6b7a72; --wash:#f3f6f4; --amber:#9a6b15;
+  --green-tint:#e3efe8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--ground);color:var(--ink);-webkit-font-smoothing:antialiased;
+  line-height:1.5;padding:58px 64px;}
+.wrap{max-width:920px;margin:0 auto;}
+
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pine-soft);font-weight:700;}
+h1{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:37px;line-height:1.12;
+  margin:11px 0 7px;letter-spacing:-.01em;color:var(--ink);}
+.sub{font-size:15.5px;color:var(--mute);max-width:720px;}
+
+.phase-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+  color:var(--pine);margin:34px 0 14px;}
+
+.card{border:1px solid var(--line);border-radius:12px;padding:17px 20px;background:#fff;}
+.card.gate{border:1.5px solid var(--pine);box-shadow:0 1px 0 rgba(31,77,58,.05);}
+.card .lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--pine);font-weight:700;}
+.card.plain .lab{color:var(--mute);}
+.card h3{font-size:19px;font-weight:700;margin:4px 0 6px;color:var(--ink);letter-spacing:-.01em;}
+.card p{font-size:14px;color:var(--mute);}
+.card p b{color:var(--ink);font-weight:700;}
+
+.arrow{text-align:center;color:var(--pine);font-size:15px;font-weight:700;margin:9px 0;letter-spacing:.02em;}
+.arrow .dim{color:#9fb0a7;}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:6px;}
+.tag.gate{background:var(--pine);color:#fff;}
+.tag.ask{background:var(--green-tint);color:var(--pine);border:1px solid #c7ddcf;}
+.tag.fan{background:var(--pine-soft);color:#fff;}
+.tag.io{background:var(--wash);color:var(--ink);border:1px solid var(--line);
+  font-family:ui-monospace,Menlo,monospace;letter-spacing:0;text-transform:none;}
+
+.eg{margin-top:13px;border-top:1px dashed var(--line);padding-top:12px;}
+.eg-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:9px;}
+.eg-cap{font-size:11.5px;color:var(--mute);margin-top:9px;font-style:italic;}
+
+.read{background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7;color:var(--ink);white-space:pre;overflow-x:auto;}
+.read .c{color:var(--mute);font-style:italic;}
+.read .hl{color:var(--pine);font-weight:700;}
+
+.opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+.opt{font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:7px;padding:4px 10px;
+  color:var(--ink);background:var(--wash);}
+.opt.go{background:var(--pine);color:#fff;border-color:var(--pine);}
+
+.catrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px;}
+.catpill{font-size:10.5px;font-weight:700;font-family:ui-monospace,Menlo,monospace;
+  background:var(--green-tint);color:var(--pine);border:1px solid #c7ddcf;border-radius:6px;padding:4px 9px;}
+.note{background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+  font-size:12.5px;color:var(--mute);}
+.note b{color:var(--ink);}
+
+.mt{width:100%;border-collapse:collapse;font-size:11px;margin-top:2px;}
+.mt th{background:var(--wash);color:var(--ink);font-size:8.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1.5px solid var(--pine);}
+.mt td{border-bottom:1px solid var(--line);padding:6px 8px;color:var(--mute);vertical-align:top;}
+.mt td.n{text-align:center;font-weight:800;color:var(--pine);width:22px;}
+.mt td.cat{text-align:center;font-weight:800;color:var(--pine-soft);font-size:9px;}
+.mt td.cmp{text-align:center;font-weight:800;color:var(--ink);}
+.mt td.ti{font-weight:700;color:var(--ink);}
+
+.foot{margin-top:36px;border-top:1px solid var(--line);padding-top:24px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;}
+.foot h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pine);
+  margin-bottom:8px;font-weight:700;}
+.foot p{font-size:13px;color:var(--ink);}
+.foot .why{color:var(--mute);font-size:12.5px;margin-top:4px;}
+
+.src{margin-top:26px;font-size:11px;color:var(--mute);font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">mental-models &middot; agent skill</div>
+  <h1>How it works: dump &rarr; infer &rarr; spar &rarr; commit</h1>
+  <p class="sub">Describe a problem once. The skill infers the run's shape, stress-tests your thinking against ~60 mental models, and commits to a position. Two modes, one confirm gate, no questionnaire. The worked example below follows one run: <b style="color:var(--ink)">Northwind's</b> AI agent hit 200 conversations in week 3, and the team wants to double marketing spend.</p>
+
+  <div class="phase-label">Phase A &middot; Intake</div>
+
+  <div class="card plain">
+    <div class="lab">Phase 0 &middot; Dump</div>
+    <h3>Describe it once</h3>
+    <p>You paste or describe the situation in one go: the thesis, the stakes, whatever framing you already have. Short is fine, rough is expected. The skill asks nothing here.</p>
+    <div class="tags"><span class="tag io">&rarr; free text in</span></div>
+    <div class="eg">
+      <div class="eg-label">Example &middot; the dump</div>
+      <div class="note" style="font-style:italic">"Northwind's AI agent hit 200 conversations in week 3. We're calling it a success and planning to double the marketing spend."</div>
+    </div>
+  </div>
+
+  <div class="arrow">&darr;</div>
+
+  <div class="card gate">
+    <div class="lab">Phase 1 &middot; Inferred read &amp; confirm</div>
+    <h3>It reads you, then confirms</h3>
+    <p>The skill infers the audience, what you're producing, the decision at stake, and the frame &mdash; all from the dump, running its frame-check behaviours as internal lenses. It shows that read and asks you to confirm or correct it in a single gate. It infers, then confirms; it does not interrogate.</p>
+    <div class="eg">
+      <div class="eg-label">Example &middot; the inferred read</div>
+<div class="read">HERE'S HOW I READ THIS
+Audience:       internal team
+Deliverable:    memo  <span class="c">&rarr; panel mode</span>
+Decision:       approve / deny doubling spend
+Frame lock:     <span class="hl">survival baseline, not success</span>
+  <span class="c">the dump reads 200 as a win; the alternative</span>
+  <span class="c">reads it as a floor, which changes the call</span></div>
+      <div class="opts">
+        <span class="opt go">ACCEPT &amp; DEPLOY</span>
+        <span class="opt">FIX ROUTING</span>
+        <span class="opt">REFRAME</span>
+        <span class="opt">ADD CONTEXT</span>
+      </div>
+      <div class="eg-cap">One gate replaces the old six-question intake. You accept, and the run deploys.</div>
+    </div>
+    <div class="tags"><span class="tag gate">Gate</span><span class="tag ask">AskUserQuestion</span></div>
+  </div>
+
+  <div class="phase-label">Phase B &middot; Stress-test</div>
+
+  <div class="card">
+    <div class="lab" style="color:var(--pine-soft)">Phase 2 &middot; Panel sparring</div>
+    <h3>Five specialists attack at once</h3>
+    <p>Five sub-agents launch in parallel, one per model category. Each spars your thesis against every model it owns and scores it 0&ndash;5 on grip, originality, and story. The discipline is adversarial: most models score 0&ndash;2, and a catch only counts if it cites specifics from your thesis.</p>
+    <div class="eg">
+      <div class="eg-label">Example &middot; the parallel fan-out</div>
+      <div class="catrow">
+        <span class="catpill">A &middot; Thinking</span>
+        <span class="catpill">B &middot; Systems</span>
+        <span class="catpill">C &middot; Execution</span>
+        <span class="catpill">D &middot; Strategy</span>
+        <span class="catpill">E &middot; Personal</span>
+      </div>
+      <div class="note"><b>B returns Churn at grip 5:</b> "200 is gross, not net &mdash; no repeat rate measured."</div>
+      <div class="note" style="margin-top:9px"><b>Solo mode</b> (personal thinking, no deliverable): instead of the panel, the skill runs the diagnostic itself and spars you interactively &mdash; an escalation ladder that descends one layer deeper each round until it reaches the assumption you can't defend.</div>
+    </div>
+    <div class="tags"><span class="tag fan">Fan-out &middot; 5 agents</span></div>
+  </div>
+
+  <div class="arrow">&darr;</div>
+
+  <div class="card plain">
+    <div class="lab" style="color:var(--mute)">Phase 2.5 &middot; Meta ranking</div>
+    <h3>One judge ranks the catches</h3>
+    <p>A meta agent composites every score (8&times;grip + 6&times;originality + 6&times;story), penalizes clichés (&minus;10) and lenses used in recent runs (&minus;15), dedupes overlapping catches, and keeps the top five load-bearing models plus the one bedrock assumption that, if false, kills the thesis.</p>
+    <div class="eg">
+      <div class="eg-label">Example &middot; the model selection table</div>
+      <table class="mt">
+        <tr><th>#</th><th>Model</th><th>Cat</th><th>Comp</th><th>Catch</th></tr>
+        <tr><td class="n">1</td><td class="ti">Churn</td><td class="cat">B</td><td class="cmp">94</td><td>200 gross &ne; net; no repeat rate</td></tr>
+        <tr><td class="n">2</td><td class="ti">Regression to the Mean</td><td class="cat">B</td><td class="cmp">91</td><td>week-3 spike may revert</td></tr>
+        <tr><td class="n">3</td><td class="ti">Falsifiability</td><td class="cat">A</td><td class="cmp">82</td><td>no evidence named that would cancel the spend</td></tr>
+      </table>
+      <div class="eg-cap">Compounding (grip 3) took the cliché penalty and dropped to the bench. Bedrock: "week-3 volume predicts week-12 retention."</div>
+    </div>
+  </div>
+
+  <div class="phase-label">Phase C &middot; Adjudicate</div>
+
+  <div class="card gate">
+    <div class="lab">Phase 3 &middot; Verdict gate</div>
+    <h3>You make the call</h3>
+    <p>The skill presents the bedrock, the five strongest attacks, and the model table. You adjudicate once. In solo mode this is where bedrock is named instead, after the sparring ladder bottoms out.</p>
+    <div class="opts">
+      <span class="opt go">ACCEPT VERDICT</span>
+      <span class="opt">CHALLENGE A FINDING</span>
+      <span class="opt">SWAP A MODEL</span>
+      <span class="opt">ADD CONTEXT &amp; RE-RUN</span>
+    </div>
+    <div class="eg-cap" style="margin-top:9px">A challenge re-runs only the one affected agent, not the whole panel.</div>
+    <div class="tags"><span class="tag gate">Gate</span><span class="tag ask">AskUserQuestion</span></div>
+  </div>
+
+  <div class="phase-label">Phase D &middot; Commit &amp; output</div>
+
+  <div class="card plain">
+    <div class="lab" style="color:var(--mute)">Phase 3.5 &middot; Narrative path</div>
+    <h3>It takes a position</h3>
+    <p>The skill commits to one recommended story and names the alternatives it rejected. This is the point of the whole run: a stand on which story the evidence supports.</p>
+    <div class="eg">
+      <div class="eg-label">Example &middot; the recommended path</div>
+      <div class="note">The story is not <span style="color:var(--mute)">"we hit 200, let's scale."</span> It is <b>"we hit 200 &mdash; here's what we need to know before we commit."</b> Load-bearing: Churn, Regression to the Mean, Falsifiability.</div>
+    </div>
+  </div>
+
+  <div class="arrow">&darr;</div>
+
+  <div class="card plain">
+    <div class="lab" style="color:var(--mute)">Phase 4 &middot; Output</div>
+    <h3>The reasoning, written inline</h3>
+    <p>The diagnostic (seven artifacts, every item tagged <b>[known] / [inferred] / [uncertain]</b>), the model selection table, and the recommended position &mdash; written straight into the conversation. Nothing is handed off. Panel runs append to the usage log, which feeds the next run's recency penalty so the same five models don't carry every analysis.</p>
+    <div class="tags"><span class="tag io">&rarr; state/usage-log.md</span></div>
+  </div>
+
+  <div class="foot">
+    <div>
+      <h4>What's preserved</h4>
+      <p>The in-agent <i>"spar, not admire"</i> discipline.</p>
+      <p class="why">It's what makes the panel beat a single generalist pass: every agent attacks, none admire.</p>
+    </div>
+    <div>
+      <h4>Why a gate, not zero</h4>
+      <p>Audience, deliverable, and frame are inferred, then confirmed.</p>
+      <p class="why">Inferring silently risks a wrong frame poisoning all five agents. The one gate is the cheap insurance.</p>
+    </div>
+    <div>
+      <h4>Two modes</h4>
+      <p>Panel for substantive calls, solo for personal thinking.</p>
+      <p class="why">Same intake and frame check; solo swaps the panel for an interactive sparring ladder.</p>
+    </div>
+  </div>
+
+  <div class="src">Source: mental-models SKILL.md. Worked example is illustrative.</div>
+
+</div>
+</body>
+</html>
